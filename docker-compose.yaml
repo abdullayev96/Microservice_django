@@ -1,0 +1,91 @@
+#version: '3.10'
+#
+#services:
+#  poll_app:
+#    build: ./polls
+#    command: bash -c "python3 ./polls/manage.py makemigrations && python3 ./polls/manage.py migrate && python3 ./polls/manage.py runserver 0.0.0.0:8001"
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8001:8001"
+#
+#  question_app:
+#    build: ./question
+#    command: bash -c "python3 ./question/manage.py makemigrations && python3 ./question/manage.py migrate && python3 ./question/manage.py runserver 0.0.0.0:8002"
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8002:8002"
+#
+#  vote_app:
+#    build: ./vote
+#    command: bash -c "python3 ./vote/manage.py makemigrations && python3 ./vote/manage.py migrate && python3 ./vote/manage.py runserver 0.0.0.0:8003"
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8003:8003"
+#
+#
+#
+#  nginx:
+#    build: ./conf
+#    ports:
+#      - "80:80"
+#    links:
+#      - poll_app
+#      - question_app
+#      - vote_app
+#    depends_on:
+#      - poll_app
+#      - question_app
+#      - vote_app
+
+
+###################  new change yml
+
+
+services:
+  poll_app:
+    build: ./polls
+    command: >
+      bash -c "python3 manage.py makemigrations && 
+                python3 manage.py migrate && 
+                python3 manage.py runserver 0.0.0.0:8001"
+    volumes:
+      - ./polls:/app
+    ports:
+      - "8001:8001"
+    restart: always
+
+  question_app:
+    build: ./question
+    command: >
+      bash -c "python3 manage.py makemigrations && 
+                python3 manage.py migrate && 
+                python3 manage.py runserver 0.0.0.0:8002"
+    volumes:
+      - ./question:/app
+    ports:
+      - "8002:8002"
+    restart: always
+
+  vote_app:
+    build: ./vote
+    command: >
+      bash -c "python3 manage.py makemigrations && 
+                python3 manage.py migrate && 
+                python3 manage.py runserver 0.0.0.0:8003"
+    volumes:
+      - ./vote:/app
+    ports:
+      - "8003:8003"
+    restart: always
+
+  nginx:
+    build: ./conf
+    ports:
+      - "80:80"
+    depends_on:
+      - poll_app
+      - question_app
+      - vote_app
